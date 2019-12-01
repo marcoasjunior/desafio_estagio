@@ -1,18 +1,18 @@
 <template>
   <div id="app">
     <NavBar />
-    <HelloWorld/>
+    <Form/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Form from './components/Form.vue'
 import NavBar from './components/NavBar'
 
 export default {
   name: 'app',
   components: {
-    HelloWorld,
+    Form,
     NavBar
   }
 }
