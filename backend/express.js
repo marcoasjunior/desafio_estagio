@@ -1,30 +1,63 @@
 const app = require('express')()
-
 const bodyParser = require('body-parser')
 const port = 3000
 const cors = require('cors')
+const cloudinary = require('cloudinary').v2
+const uniqueFilename = new Date().toISOString()
 const multer = require('multer')
 const upload = multer({
-    dest: './uploads',
-    storage: multer.diskStorage({
+  dest: './uploads',
+  storage: multer.diskStorage({
 
-        filename: function (req, file, cb) {
-          cb(null, Date.now() + '-' + file.originalname)
-        }
-      })
+    filename: function (req, file, cb) {
+      cb(null, Date.now() + '-' + file.originalname)
+    }
+  })
 })
 
 app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({
-    extended: true
-  }))
+  extended: true
+}))
+
+const clients = Array
+
+
+
 
 app.post('/upload', upload.single('file'), (req, res) => {
-    res.send('veio')
+
+  // SEND FILE TO CLOUDINARY
+
+  cloudinary.config({
+    cloud_name: 'dxblalpv2',
+    api_key: '533837714717359',
+    api_secret: 'bLMSuhK0Oy8_tOrlRcpGmM9IXCI'
+  })
+
+  cloudinary.uploader.upload(req.file.path, {
+      public_id: `${uniqueFilename}`,
+    },
+
+  function (err, image) {
+    if (err) res.send(err)
+    // eslint-disable-next-line no-console
+    console.log('file uploaded to Cloudinary')
+    // remove file from server
+    const fs = require('fs')
+    fs.unlinkSync(req.file.path)
+    // return image details
+    res.json(image)
+
+    }
+
+    
+
+  )
+
 
 })
-
 
 app.listen(port)
 
