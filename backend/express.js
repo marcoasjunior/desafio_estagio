@@ -24,15 +24,16 @@ app.use(bodyParser.urlencoded({
 
 const clients = []
 
+// CADASTRAR CLIENTES
 
 app.post('/upload', upload.single('file'), (req, res) => {
 
   // SEND FILE TO CLOUDINARY
 
   cloudinary.config({
-    cloud_name: 'dxblalpv2',
-    api_key: '533837714717359',
-    api_secret: 'bLMSuhK0Oy8_tOrlRcpGmM9IXCI'
+    cloud_name: 'dvzbogxib',
+        api_key: '564392447589239',
+        api_secret: 'lBY9lvTcbNawz-AyvEg9WMW_ga8'
   })
 
   cloudinary.uploader.upload(req.file.path, {
@@ -48,6 +49,9 @@ app.post('/upload', upload.single('file'), (req, res) => {
     // return image details
     res.json(image)
 
+    console.log(image)
+    console.log(image.url)
+
     const newRegister ={
       name: req.body.name,
       email: req.body.email,
@@ -61,12 +65,15 @@ app.post('/upload', upload.single('file'), (req, res) => {
 
     console.log(clients)
 
-    }
-
-    
+    } 
 
   )
 
+    // PEGAR CLIENTES
+
+  app.get('/clients', (req, res) => {
+    res.send(clients)
+  })
 
 })
 

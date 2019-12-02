@@ -56,7 +56,7 @@
         show: false,
         passwordOne: '',
         passwordTwo: '',
-        response: null
+        
       }
     },
 
@@ -112,6 +112,11 @@
           this.passwordTwo = ''
           this.file = null
           this.url = ''
+
+          // emitir evento
+
+          this.$emit('changeDisplay')
+
         }
       },
 
