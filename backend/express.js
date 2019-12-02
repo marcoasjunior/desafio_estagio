@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const app = require('express')()
 const bodyParser = require('body-parser')
 const port = 3000
@@ -21,9 +22,7 @@ app.use(bodyParser.urlencoded({
   extended: true
 }))
 
-const clients = Array
-
-
+const clients = []
 
 
 app.post('/upload', upload.single('file'), (req, res) => {
@@ -42,13 +41,25 @@ app.post('/upload', upload.single('file'), (req, res) => {
 
   function (err, image) {
     if (err) res.send(err)
-    // eslint-disable-next-line no-console
     console.log('file uploaded to Cloudinary')
     // remove file from server
     const fs = require('fs')
     fs.unlinkSync(req.file.path)
     // return image details
     res.json(image)
+
+    const newRegister ={
+      name: req.body.name,
+      email: req.body.email,
+      password: req.body.password,
+      file: image.url
+    }
+
+    console.table(req.body)
+
+    clients.push(newRegister)
+
+    console.log(clients)
 
     }
 

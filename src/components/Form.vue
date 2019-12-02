@@ -1,8 +1,9 @@
+
 <template>
   <div>
     <b-container class="box shadow p-3 mb-5 bg-white rounded">
       <b-navbar class="nav" type="light" variant="light">
-        <b-navbar-brand tag="h1" class="mb-0">Credentials</b-navbar-brand>
+        <b-navbar-brand tag="h1" class="mb-0">Register Your Credentials Bellow </b-navbar-brand>
       </b-navbar>
       <div id="preview">
             <b-img  v-show="url" :src="url" fluid />
@@ -44,6 +45,7 @@
 </template>
 
 <script>
+/* eslint-disable no-console */
   export default {
     data() {
       return {
@@ -54,7 +56,6 @@
         show: false,
         passwordOne: '',
         passwordTwo: '',
-        errors: Array,
         response: null
       }
     },
@@ -75,29 +76,43 @@
 
       onSubmit(evt) {
         evt.preventDefault()
-        let api = ''
+        if (this.show) {
 
-        // configurações do header
+          let api = 'http://localhost:3000/upload'
 
-        const config = {
-                header: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            }
+          // configurações do header
 
-        // formulario 
+          const config = {
+                  header: {
+                      'Content-Type': 'multipart/form-data'
+                  }
+              }
 
-        const formData = new FormData()
-            formData.append('file', this.newFile)
-            this.putResponse = formData
+          // formulario 
 
-        // post de cadastro
+          const formData = new FormData()
+              formData.append('file', this.file)
+              formData.append('email', this.email)
+              formData.append('name', this.name)
+              formData.append('password', this.passwordTwo)
+        
+          // post de cadastro
 
-        this.axios.post(api, formData, config)
-          .then(response => this.response = response)
-          .catch(e => {
-                    this.errors.push(e)
-                })
+          this.axios.post(api, formData, config)
+            .then(response => console.log(response))
+            .catch(e => {
+                      console.log(e)
+                  })
+
+          // limpar
+
+          this.email = ''
+          this.name = ''
+          this.passwordOne = ''
+          this.passwordTwo = ''
+          this.file = null
+          this.url = ''
+        }
       },
 
       onReset(evt) {
@@ -106,6 +121,8 @@
         this.name = ''
         this.passwordOne = ''
         this.passwordTwo = ''
+        this.file = null
+        this.url = ''
 
       }
     }
