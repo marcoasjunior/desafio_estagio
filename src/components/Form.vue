@@ -6,22 +6,12 @@
         <b-navbar-brand tag="h1" class="mb-0">Register Your Credentials Bellow </b-navbar-brand>
       </b-navbar>
       <div id="preview">
-            <b-img  v-show="url" :src="url" fluid />
-        </div>
-      <b-form @submit="onSubmit" @reset="onReset">  
-        <b-form-group id="input-group-1" label="Enter Image:" label-for="input-0">      
-            <b-form-file
-                class="img"
-                v-model="file"
-                :state="Boolean(file)"
-                placeholder="Image"
-                name='avatar'
-                ref="fileInput"
-                @change="onFileChange($event)"
-                required 
-                capture 
-                accept="image/*,.pdf"
-                ></b-form-file>
+        <b-img v-show="url" :src="url" fluid />
+      </div>
+      <b-form @submit="onSubmit" @reset="onReset">
+        <b-form-group id="input-group-1" label="Enter Image:" label-for="input-0">
+          <b-form-file class="img" v-model="file" :state="Boolean(file)" placeholder="Image" name='avatar'
+            ref="fileInput" @change="onFileChange($event)" required capture accept="image/*,.pdf"></b-form-file>
         </b-form-group>
         <b-form-group id="input-group-1" label="Email Address:" label-for="input-1">
           <b-form-input id="input-1" v-model="email" type="email" required placeholder="Enter email">
@@ -46,82 +36,65 @@
 
 <script>
 /* eslint-disable no-console */
-  export default {
-    data() {
-      return {
-        file: null,
-        url: null,
-        email: '',
-        name: '',
-        show: false,
-        passwordOne: '',
-        passwordTwo: '',
-        
-      }
+export default {
+  data() {
+    return {
+      file: null,
+      url: null,
+      email: '',
+      name: '',
+      show: false,
+      passwordOne: '',
+      passwordTwo: '',
+    }
+  },
+
+  watch: {
+    passwordTwo: function (value) {
+      value && this.passwordOne == '' ? this.show = false : value == this.passwordOne ? this.show = true : this.show = false
+    }
+  },
+
+  methods: {
+
+    onFileChange(e) {
+      const file = e.target.files[0];
+      this.url = URL.createObjectURL(file);
+      this.file = file
     },
 
-    watch: {
-      passwordTwo: function (value) {
-        value && this.passwordOne == '' ? this.show = false : value == this.passwordOne ? this.show = true : this.show = false
-      }
-    },
+    onSubmit(evt) {
+      evt.preventDefault()
+      if (this.show) {
 
-    methods: {
+        let api = 'http://localhost:3000/upload'
 
-      onFileChange(e) {
-                const file = e.target.files[0];
-                this.url = URL.createObjectURL(file);
-                this.file  = file
-            },
+        // configurações do header
 
-      onSubmit(evt) {
-        evt.preventDefault()
-        if (this.show) {
-
-          let api = 'http://localhost:3000/upload'
-
-          // configurações do header
-
-          const config = {
-                  header: {
-                      'Content-Type': 'multipart/form-data'
-                  }
-              }
-
-          // formulario 
-
-          const formData = new FormData()
-              formData.append('file', this.file)
-              formData.append('email', this.email)
-              formData.append('name', this.name)
-              formData.append('password', this.passwordTwo)
-        
-          // post de cadastro
-
-          this.axios.post(api, formData, config)
-            .then(response => console.log(response))
-            .catch(e => {
-                      console.log(e)
-                  })
-
-          // limpar
-
-          this.email = ''
-          this.name = ''
-          this.passwordOne = ''
-          this.passwordTwo = ''
-          this.file = null
-          this.url = ''
-
-          // emitir evento
-
-          this.$emit('changeDisplay')
-
+        const config = {
+          header: {
+            'Content-Type': 'multipart/form-data'
+          }
         }
-      },
 
-      onReset(evt) {
-        evt.preventDefault()
+        // formulario 
+
+        const formData = new FormData()
+        formData.append('file', this.file)
+        formData.append('email', this.email)
+        formData.append('name', this.name)
+        formData.append('password', this.passwordTwo)
+
+        // post de cadastro
+
+        this.axios.post(api, formData, config)
+          .then(response => console.log(response))
+          .catch(e => {
+            console.log(e)
+          })
+
+        // limpar
+
         this.email = ''
         this.name = ''
         this.passwordOne = ''
@@ -129,9 +102,25 @@
         this.file = null
         this.url = ''
 
+        // emitir evento
+
+        this.$emit('changeDisplay')
+
       }
+    },
+
+    onReset(evt) {
+      evt.preventDefault()
+      this.email = ''
+      this.name = ''
+      this.passwordOne = ''
+      this.passwordTwo = ''
+      this.file = null
+      this.url = ''
+
     }
   }
+}
 </script>
 
 <style scoped>

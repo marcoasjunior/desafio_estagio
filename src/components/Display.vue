@@ -1,23 +1,19 @@
 
 <template>
   <div>
-    <div >
-        <b-card
-            v-for="client in clients" 
-            :key='clients'
-            :title="client.name"
-            :img-src="client.image"
-            img-alt="Image"
-            img-top
-            style="max-width: 20rem;"
-            class="mb-2"
-        >
-            <b-card-text>
-            {{email}}
-            </b-card-text>
-
+    <div>
+      <b-row>
+        <b-button class="button" v-if='!display' @click='refresh' variant="outline-primary">Refresh</b-button>
+      </b-row>
+      <b-card-group deck>
+        <b-card v-for="(client, index) in clients" :key='index' :title="client.name" :img-src="client.file"
+          img-alt="Image" img-top class="overflow-hidden" style="max-width: 300px;">
+          <b-card-text>
+            E-mail: {{client.email}}
+          </b-card-text>
         </b-card>
-        </div>
+      </b-card-group>
+    </div>
   </div>
 </template>
 
@@ -26,31 +22,37 @@
   export default {
     data() {
       return {
-          image: null,
-          name: null,
-          email: null,
-          clients: null
-   
+        image: null,
+        name: null,
+        email: null,
+        clients: null,
+        api: 'http://localhost:3000/clients'
+
       }
     },
 
     methods: {
-      
-  },
-
-    created() {
-        let api = 'http://localhost:3000/clients'
-        
-        this.axios.get(api)
-            .then(response => {
-        this.clients = response.data
-        console.log(this.clients)
-      })
-            .catch(e => {
-                      console.log(e)
-                  })
-
-    }
+      refresh() {
+        this.axios.get(this.api)
+          .then(response => {
+            this.clients = response.data
+            console.log(this.clients)
+          })
+          .catch(e => {
+            console.log(e)
+          })
+      }
+    },
+    mounted() {
+      this.axios.get(this.api)
+        .then(response => {
+          this.clients = response.data
+          console.log(this.clients)
+        })
+        .catch(e => {
+          console.log(e)
+        })
+    },
 
 }
 </script>
