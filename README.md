@@ -1,6 +1,6 @@
 ### desafio_estagio
 
-Instruções para rodar a plaicação abaixo
+Instruções para rodar a aplicação abaixo:
 
 ## Setup inicial
 ```
